@@ -212,4 +212,538 @@
             315: { name: "Brief Isolation", action: "Weather or travel bans close the roads temporarily. -> Add or remove a landmark." },
             316: { name: "Extended Isolation", action: "The city is cut off for years; self-reliance is forced. -> Remove a resource." },
             317: { name: "Market Crash", action: "Currency debasement destroys personal savings. -> Remove a district." },
-            321: { name: "HYPE
+            321: { name: "HYPE!", action: "An absurd fad takes over. Everyone spends recklessly on a useless commodity. -> Do nothing." },
+            322: { name: "A New Need", action: "Technology or fashion shifts, requiring a new material. -> Add a resource." },
+            323: { name: "Need Satisfied for All", action: "Abundance ensures no citizen goes hungry this era. -> Do nothing." },
+            324: { name: "New Source of Power", action: "Steam, magic, fuel, or water mills change manufacturing. -> Add a resource, add a district." },
+            325: { name: "New Trade Route Established", action: "A grand highway or shipping lane connects to the core. -> Add a resource." },
+            326: { name: "New Production Method", action: "Assembly lines or specialized magical automation accelerate output. -> Add a resource, a faction gains power." },
+            331: { name: "Good Times", action: "A steady, unremarkable era of quiet prosperity and content families. -> Add a district." },
+            332: { name: "Stability", action: "Prices remain identical. Nothing changes in the counting houses. -> Do nothing." },
+            333: { name: "Windfall", action: "Unbelievable luck unearths a cache of value. -> Add a resource." },
+            334: { name: "Production Rises", action: "Efficiency peaks across current workshops. -> Add a resource." },
+            335: { name: "Economic Boom", action: "Gold overflows. Speculators flood the streets. -> A faction gains power, add a resource." },
+            336: { name: "A Great Investment", action: "Capital is poured into building future security. -> Add a landmark." },
+            341: { name: "Monopoly Established", action: "A ruthless guild secures absolute control over a resource. -> A faction becomes incredibly strong." },
+            342: { name: "Black Market Thrives", action: "Smugglers bypass city taxes completely. -> Add a faction (criminal element)." },
+            343: { name: "Currency Reform", action: "A new coinage system stabilizes volatile markets. -> Add a resource." },
+            344: { name: "Resource Exhausted", action: "A local vein of ore, forest, or soil goes completely dry. -> Remove a resource." },
+            345: { name: "Economic Depression", action: "Widespread poverty clears out shops. -> Remove a district." },
+            346: { name: "Hyperinflation", action: "Money becomes completely worthless; bartering returns. -> A faction loses power." },
+            351: { name: "Tax Increase", action: "The crown demands higher dues from everyday citizens. -> Move 1 token from Reserve Pool to City." },
+            352: { name: "Tax Relief", action: "A generous tax holiday gives families breathing room. -> Add a district." },
+            353: { name: "General Strike", action: "Laborers lay down tools, halting infrastructure. -> A faction gains power, remove a resource." },
+            354: { name: "Smuggling Ring Busted", action: "Guards seize a hidden underground vault. -> Add a resource." },
+            355: { name: "Foreign Investment", action: "A global empire builds a majestic hub in your city. -> Add a landmark." },
+            356: { name: "Debt Default", action: "The city council defaults on a foreign loan. -> Remove a landmark." },
+            361: { name: "Agricultural Abundance", action: "Bumper crops fill granaries to the ceiling. -> Add a resource." },
+            362: { name: "Agrarian Failure", action: "Blight destroys the harvest. Starvation looms. -> Remove a resource." },
+            363: { name: "Livestock Plague", action: "A strange disease wipes out beasts of burden. -> Remove a resource." },
+            364: { name: "Land Rush", action: "Speculators buy up surrounding countryside plots. -> Expand the outer map boundary lines." },
+            365: { name: "Enclosure Movement", action: "Common lands are privatized by the elite. -> A faction gains power, add a landmark." },
+            366: { name: "Famine", action: "A severe food shortage forces refugees to flee. -> Remove a district." },
+
+            // --- 4. CULTURE (411-466) ---
+            411: { name: "Religious Awakening", action: "A new prophet builds a massive following. -> Add a faction (religious group)." },
+            412: { name: "Heresy Crackdown", action: "The dominant power purges unorthodox thinkers. -> Remove a faction." },
+            413: { name: "Schism", action: "The temple or church splits violently into two theological factions. -> Add a faction." },
+            414: { name: "Miracle Reported", action: "A supernatural occurrence brings pilgrims flocking in. -> Add a landmark (shrine)." },
+            415: { name: "Secularization", action: "Science or pragmatism minimizes religious authority. -> A religious faction loses power." },
+            416: { name: "Sacred Site Discovered", action: "An ancient holy grove or ruin is found nearby. -> Add a landmark." },
+            421: { name: "Artistic Renaissance", action: "Painters, writers, and bards elevate the city's reputation. -> Add a landmark (theater/gallery)." },
+            422: { name: "Cultural Censorship", action: "The state bans books, theater, or subversive music. -> A faction loses power." },
+            423: { name: "A Great Monument Commissioned", action: "Construction begins on a massive statue or wonder. -> Add a landmark." },
+            424: { name: "Architectural Shift", action: "A beautiful foreign design language updates new construction styles. -> Add a district." },
+            425: { name: "An Intellectual Golden Age", action: "Philosophers and inventors gather here. -> Add a landmark (university/academy)." },
+            426: { name: "Iconoclasm", action: "Rioting mobs smash traditional art and public monuments. -> Remove a landmark." },
+            431: { name: "A Grand Festival", action: "An annual celebratory tradition is codified. -> Add a landmark (festival grounds)." },
+            432: { name: "Taboo Shattered", action: "An ancient social restriction is publicly broken and accepted. -> A faction gains power." },
+            433: { name: "Xenophobic Backlash", action: "Fear of foreign influence polarizes neighborhoods. -> Remove a district." },
+            434: { name: "Cultural Integration", action: "Migrants enrich the local cuisine, music, and layout. -> Add a district." },
+            435: { name: "A Great Sports/Arena Tradition", action: "Athletic contests become central to identity. -> Add a landmark (stadium/colosseum)." },
+            436: { name: "Superstition Grips the Streets", action: "Fear of bad omens slows down civic progress. -> Do nothing." },
+            441: { name: "Educational Push", action: "Basic literacy rates spike among commoners. -> Add a district." },
+            442: { name: "Anti-Intellectual Movement", action: "Schools are shuttered by an authoritarian wave. -> A faction loses power." },
+            443: { name: "Scientific Breakthrough", action: "A local inventor fixes a fundamental design problem. -> Add a resource." },
+            444: { name: "Medical Advancement", action: "Sanitation theories mitigate traditional urban sickness. -> Add a landmark (hospital/aqueduct)." },
+            445: { name: "Forbidden Knowledge Leaked", action: "Alchemical or forbidden texts disrupt societal hierarchy. -> Add a faction." },
+            446: { name: "Lost Technology Recovered", action: "An artifact from an ancient era is successfully booted up. -> Add a resource." },
+            451: { name: "A New Class Emerges", action: "A distinct social tier (like factory owners or free peasants) demands space. -> Add a faction." },
+            452: { name: "Class Warfare", action: "The absolute poorest clash openly with the nobility. -> Remove a landmark." },
+            453: { name: "Utopian Experiment", action: "A district models radical communal living. -> Add a district." },
+            454: { name: "Slavery/Serfdom Abolished", action: "Human rights improve, causing a massive restructuring of labor. -> Leading faction loses power." },
+            455: { name: "Sumptuary Laws Passed", action: "Lower classes are legally barred from wearing luxury clothing styles. -> A faction gains power." },
+            456: { name: "An Era of Decadence", action: "The elite spend fortunes on opulent parties while infrastructure rots. -> Remove a resource." },
+            461: { name: "Pilgrim Influx", action: "Religious travelers crowd the local hostels. -> Add a district." },
+            462: { name: "A Great Thinker Dies", action: "The intellectual guiding light of a generation passes away. -> A faction loses power." },
+            463: { name: "Language Shift", action: "A foreign dialect becomes the primary tongue of commerce. -> Do nothing." },
+            464: { name: "Archaeological Find", action: "Excavations beneath the streets find foundational secrets. -> Add a landmark." },
+            465: { name: "A New Fashion Craze", action: "An expensive cosmetic trend drains citizen coin. -> Remove a resource." },
+            466: { name: "A Shared Legend Born", action: "A heroic event bonds all factions in unified pride. -> All factions gain stability." },
+
+            // --- 5. INFRASTRUCTURE (511-566) ---
+            511: { name: "Grand Highway Constructed", action: "A paved road connects distant quarters. -> Add a landmark (Grand Road)." },
+            512: { name: "Aqueduct System Built", action: "Fresh running water enters the grid. -> Add a landmark, add a district." },
+            513: { name: "Sewage Network Completed", action: "Underground plumbing cleans the streets. -> Add a resource." },
+            514: { name: "Grand Harbor Expansion", action: "If coastal/river based, shipping capacity doubles. -> Add a landmark (Docks)." },
+            515: { name: "Public Transit/Canals", action: "Internal travel pathways streamline movement. -> Add a district." },
+            516: { name: "Public Lighting Installed", action: "Torches or gas lamps illuminate nighttime paths. -> Add a resource." },
+            521: { name: "Civic Center Erected", action: "A grand town hall or public plaza takes shape. -> Add a landmark." },
+            522: { name: "Central Granary Built", action: "Food security reserves are safe from mice and moisture. -> Add a landmark." },
+            523: { name: "Grand Market Constructed", action: "A permanent covered market structure anchors trade. -> Add a landmark." },
+            524: { name: "Slums Form", action: "Unchecked growth creates a dangerous, dense ghetto. -> Add a district (Slums)." },
+            525: { name: "Elite Enclave Built", action: "Gated luxury estates separate the rich from commoners. -> Add a district." },
+            526: { name: "Industrial Zone Expands", action: "Tanneries, smoke stacks, or foundries concentrate in one sector. -> Add a district, add a resource." },
+            531: { name: "Disastrous Collapse", action: "A poorly constructed bridge or tower crashes down. -> Remove a landmark." },
+            532: { name: "Structural Decay", action: "Lack of public funds leaves public spaces rotting. -> Remove a resource." },
+            533: { name: "Zoning Reorganisation", action: "Old housing blocks are cleared to optimize thoroughfares. -> Remove a district, add a landmark." },
+            534: { name: "The Waterfront rots", action: "Pier infrastructure collapses into the mud. -> Remove a resource." },
+            535: { name: "Public Park Established", action: "A manicured natural sanctuary is preserved within the city. -> Add a landmark." },
+            536: { name: "Defensive Upgrade", action: "Bastions and battlements are added to existing walls. -> Add a landmark." },
+            541: { name: "Subterranean Expansion", action: "Catacombs or structural basements expand downward. -> Add a resource." },
+            542: { name: "Land Reclamation", action: "Swamps are drained or shorelines filled to build more houses. -> Expand the grid lines, add a district." },
+            543: { name: "Bridges Built", action: "Spans connect opposing sides of a canyon or river. -> Add a landmark (Bridge)." },
+            544: { name: "Canal System Cut", action: "Artificial waterways connect internal sectors. -> Add a landmark." },
+            545: { name: "Grand Wall Extension", action: "The city wall budget increases to encapsulate outer suburbs. -> Add a landmark." },
+            546: { name: "Suburban Sprawl", action: "Houses scatter completely outside original boundaries. -> Add an outer district." },
+            551: { name: "Great Fire", action: "A neighborhood is reduced to ash. -> Remove a district." },
+            552: { name: "Industrial Accident", action: "An alchemical or chemical blast destroys a workspace. -> Remove a resource." },
+            553: { name: "Dam Construction", action: "Water flow is mechanical and controlled. -> Add a landmark, alter local water features." },
+            554: { name: "Warehouse District Built", action: "Massive storage lockers line the commerce gates. -> Add a district." },
+            555: { name: "Monument Restored", action: "An ancient ancestral landmark is carefully repaired. -> Add a landmark." },
+            556: { name: "Transit Hub Established", action: "Caravanserais or train stations centralize travel. -> Add a landmark." },
+            561: { name: "Quarry Opened", action: "Stone mining operations expand adjacent to the grid. -> Add a resource." },
+            562: { name: "Lumber Mill Expansion", action: "Forest clearing accelerates. -> Add a resource, remove a forest feature." },
+            563: { name: "Mine Shaft Deepened", action: "Valuable metals are struck deep below. -> Add a resource." },
+            564: { name: "Foundry Completed", action: "Heavy metal processing boosts defensive options. -> Add a landmark." },
+            565: { name: "Brickworks Opened", action: "Timber buildings are slowly replaced with sturdy masonry. -> Add a resource." },
+            566: { name: "Grand Architecture Finished", action: "The city skyline becomes legendary. -> Add a magnificent landmark." },
+
+            // --- 6. ENVIRONMENT (611-666) ---
+            611: { name: "Severe Winter", action: "Frost kills livestock and locks down transit. -> Remove a resource." },
+            612: { name: "Drought", action: "Wells dry up and crops wither in the heat. -> Remove a resource." },
+            613: { name: "Great Flood", action: "The water line bursts, drowning low-lying zones. -> Remove a district." },
+            614: { name: "Earthquake", action: "Shifting fault lines crack stone foundations. -> Remove a landmark or district." },
+            615: { name: "Volcanic Ash/Smog", action: "A nearby mountain or intense industry chokes out the sun. -> Remove a resource." },
+            616: { name: "Hurricane/Tornado", action: "Violent winds rip off rooftops. -> Remove a district." },
+            621: { name: "Epidemic Outbreak", action: "A horrific plague kills a portion of the populace. -> Move 2 tokens from City back to Reserves." },
+            622: { name: "Crop Blight", action: "A fungus turns wheat or crops to black slime. -> Remove a resource." },
+            623: { name: "Locust Swarm", action: "Millions of insects consume everything green. -> Remove a resource." },
+            624: { name: "Water Contamination", action: "The main river or oasis turns toxic. -> Remove a resource." },
+            625: { name: "Spore Influx", action: "Fungal or magical spores alter animal behavior. -> Add a hazardous landmark." },
+            626: { name: "Miraculous Medical Cure", action: "Nature yields a root that eradicates a historical sickness. -> Add a resource." },
+            631: { name: "Climate Shift (Warming)", action: "Winters grow mild; new crop varieties thrive. -> Add a resource." },
+            632: { name: "Climate Shift (Cooling)", action: "Glaciers or frost lines edge closer over decades. -> Remove a resource." },
+            633: { name: "River Changes Course", action: "The river organically cuts a new channel through the grid. -> Shift water lines on map; remove 1 district." },
+            634: { name: "Coastline Erosion", action: "The ocean claims structural land. -> Remove a coastal landmark." },
+            635: { name: "Sinkhole Opens", action: "An entire street collapses into an underground cavern. -> Remove a district." },
+            636: { name: "Desertification", action: "Arid sands creep into fertile fields. -> Remove a resource." },
+            641: { name: "Meteor Impact", action: "A rock from the heavens leaves a crater. -> Remove a landmark, add a rare resource." },
+            642: { name: "Aurora Borealis Permanent", action: "The sky glows with permanent electromagnetic or magical lights. -> Add a landmark." },
+            643: { name: "Geothermal Activity", action: "Hot springs bubble up within the city. -> Add a landmark (Baths)." },
+            644: { name: "Magnetic Anomaly", action: "Compass needles spin wildly; iron acts strange. -> Add a unique resource." },
+            645: { name: "Eclipse Era", action: "The sun remains obscured for months, altering psychology. -> A faction loses power." },
+            646: { name: "Flora Mutation", action: "Plants grow at triple speed, swallowing old stone paths. -> Remove a landmark." },
+            651: { name: "Extreme Storms", action: "Lightning strikes a critical watchtower or spire. -> Remove a landmark." },
+            652: { name: "Acid Rain/Corrosion", action: "Chemical clouds or atmospheric rot eat away at rooftops. -> Remove a landmark or district." },
+            653: { name: "FIRE!", action: "The fire of a century tears through houses, leveling entire blocks. -> Remove at least 2 districts or landmarks." },
+            654: { name: "Wildfires", action: "Dangerous forest fires ravage the immediate countryside. -> Remove a resource or terrain feature." },
+            655: { name: "Unexplained Phenomena", action: "Flickering lights in the sky or glowing bands in the woods. -> Change nothing." },
+            656: { name: "Space Expands", action: "It feels as if gods or machines literally stretched the physical land itself. -> Expand the city grid." },
+            661: { name: "Space Contracts", action: "Unnatural tremors or unprecedented technologies shrink distance. -> Reduce the city grid density." },
+            662: { name: "Time Pauses", action: "An era where nothing ages or changes. -> Add or remove an arbitrary landmark." },
+            663: { name: "Time Changes", action: "History changes its perception of itself, warping reality. -> Add 1D6 turns to the development phase." },
+            664: { name: "Physics Change", action: "Up is down, gravity fluctuates, or space turns completely non-Euclidean. Your choice. -> Do nothing structural." },
+            665: { name: "Dimensional Rift", action: "A tear in reality opens in the city center. -> Add a highly volatile landmark." },
+            666: { name: "The End Times Avoided", action: "A cataclysmic omen passes by without striking. -> Add a major landmark commemorating salvation." }
+        };
+// --- ENGINE STATE VARIABLES ---
+        let state = {
+            step: "INTRO",
+            setting: "",
+            expectations: "",
+            sizeKey: 1,
+            ageKey: 1,
+            cityName: "Gulltown",
+            tokensPool: 0,
+            tokensCity: 0,
+            rolledFeatures: [], // Persistently tracks rolled terrain features
+            currentDevTurn: 1,
+            maxDevTurns: 0,
+            featureRollCount: 0
+        };
+
+        // --- RENDER ENGINE ---
+        function render() {
+            const content = document.getElementById("step-content");
+            const btnBack = document.getElementById("btn-back");
+            const btnNext = document.getElementById("btn-next");
+            const dashboard = document.getElementById("state-dashboard");
+
+            document.getElementById("dash-name").innerText = state.cityName;
+            document.getElementById("dash-scale").innerText = `${SIZE_TABLE[state.sizeKey].name} / ${AGE_TABLE[state.ageKey].name}`;
+            document.getElementById("dash-pool").innerText = state.tokensPool;
+            document.getElementById("dash-step").innerText = state.step;
+
+            if (state.step === "INTRO") {
+                dashboard.classList.add("hidden");
+                btnBack.classList.add("hidden");
+                btnNext.innerText = "Setup Setting";
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold text-amber-400 mb-4">Welcome to Ex Novo</h2>
+                    <p class="text-slate-300 leading-relaxed">This digital companion guides you sequentially through drawing and generating your settlement map history. Grab a physical sheet of paper, pencils, and follow along with the app prompts.</p>
+                `;
+            } 
+            else if (state.step === "DISCUSSION_SETTING") {
+                dashboard.classList.add("hidden");
+                btnBack.remove("hidden");
+                btnNext.innerText = "Next: Scale & Tokens";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 1: Discussion & Settings</h2>
+                    <p class="text-sm text-slate-400 mb-4">Align your setting parameters with your group before drawing.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider font-bold text-slate-400 mb-1">World Setting Theme</label>
+                            <input type="text" id="input-setting" class="w-full bg-slate-900 border border-slate-700 p-2 rounded text-slate-200" placeholder="e.g., Post-apocalyptic, Fantasy kingdom" value="${state.setting}">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider font-bold text-slate-400 mb-1">Game Expectations / Intent</label>
+                            <input type="text" id="input-expectations" class="w-full bg-slate-900 border border-slate-700 p-2 rounded text-slate-200" placeholder="e.g., RPG backdrop, creative writing sandbox" value="${state.expectations}">
+                        </div>
+                    </div>
+                `;
+            }
+            else if (state.step === "DISCUSSION_SCALE") {
+                dashboard.classList.remove("hidden");
+                btnNext.innerText = "Next: Geography";
+                
+                let sizeOptions = Object.keys(SIZE_TABLE).map(k => `
+                    <button onclick="selectSize(${k})" class="p-3 rounded-lg text-left border ${state.sizeKey == k ? 'bg-amber-500/20 border-amber-400 text-amber-300' : 'bg-slate-900 border-slate-700 hover:border-slate-500'} transition">
+                        <div class="font-bold">${SIZE_TABLE[k].name}</div>
+                        <div class="text-xs text-slate-400">${SIZE_TABLE[k].desc}</div>
+                        <div class="text-xs text-emerald-400 mt-1">Grid: ${SIZE_TABLE[k].grid} lines | Tokens: ${SIZE_TABLE[k].tokens}</div>
+                    </button>
+                `).join("");
+
+                let ageOptions = Object.keys(AGE_TABLE).map(k => `
+                    <button onclick="selectAge(${k})" class="p-3 rounded-lg text-left border ${state.ageKey == k ? 'bg-purple-500/20 border-purple-400 text-purple-300' : 'bg-slate-900 border-slate-700 hover:border-slate-500'} transition">
+                        <div class="font-bold">${AGE_TABLE[k].name}</div>
+                        <div class="text-xs text-slate-400">${AGE_TABLE[k].desc}</div>
+                        <div class="text-xs text-purple-400 mt-1">Turns: ${AGE_TABLE[k].turns} rounds</div>
+                    </button>
+                `).join("");
+
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-4">Phase 1.3 & 1.4: Target Scale & Lifespan</h2>
+                    <div class="mb-4"><label class="block text-xs font-bold text-slate-400 mb-2 uppercase">1. Select Target Size</label><div class="grid grid-cols-1 md:grid-cols-3 gap-3">${sizeOptions}</div></div>
+                    <div><label class="block text-xs font-bold text-slate-400 mb-2 uppercase">2. Select Target Age</label><div class="grid grid-cols-1 md:grid-cols-3 gap-3">${ageOptions}</div></div>
+                    <div class="mt-6 bg-slate-900 p-3 rounded text-sm text-slate-400 border border-slate-800">
+                        <strong>Action:</strong> Draw an organic grid of <span class="text-amber-300 font-bold">${SIZE_TABLE[state.sizeKey].grid} lines</span> on your paper. Gather <span class="text-emerald-400 font-bold">${SIZE_TABLE[state.sizeKey].tokens} tokens</span> in your reserve pool.
+                    </div>
+                `;
+            }
+            else if (state.step === "FOUNDING_GEOGRAPHY") {
+                btnNext.innerText = "Next: Terrain Features";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.1: Major Geography</h2>
+                    <p class="text-slate-300 mb-4">Discover what geographical region this settlement occupies.</p>
+                    <button onclick="rollGeography()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 2D6 Geography</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_FEATURES") {
+                btnNext.innerText = state.featureRollCount >= 4 ? "Next: Founding Location" : "Roll Next Feature";
+                
+                // Build HTML list of already rolled features to display permanently on screen
+                let featuresListHTML = "";
+                if (state.rolledFeatures.length > 0) {
+                    featuresListHTML = `
+                        <div class="mt-6 bg-slate-900/50 rounded-lg p-4 border border-slate-700">
+                            <h3 class="text-xs uppercase font-bold text-slate-400 tracking-wider mb-2">Current Terrain Features List</h3>
+                            <ul class="space-y-2 text-sm">
+                                ${state.rolledFeatures.map((f, idx) => `
+                                    <li class="flex items-start gap-2">
+                                        <span class="text-indigo-400 font-bold font-mono">#${idx+1}:</span>
+                                        <span class="text-slate-200">${f}</span>
+                                    </li>
+                                `).join("")}
+                            </ul>
+                        </div>
+                    `;
+                }
+
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.2: Terrain Features (${state.featureRollCount}/4)</h2>
+                    <p class="text-slate-300 mb-4">Discover four distinct natural features surrounding the core settlement grid area.</p>
+                    <button id="btn-roll-feature" ${state.featureRollCount >= 4 ? 'disabled class="px-5 py-3 bg-slate-700 text-slate-500 cursor-not-allowed rounded"' : 'class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow transition" onclick="rollFeature()"'} >🎲 Roll Terrain Feature</button>
+                    
+                    <div id="roll-result" class="hidden mt-4 bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                    
+                    ${featuresListHTML}
+                `;
+            }
+            else if (state.step === "FOUNDING_LOCATION") {
+                btnNext.innerText = "Next: Founding Decision";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.3: Founding Location Purpose</h2>
+                    <p class="text-slate-300 mb-4">What was naturally special or valuable about this exact spot?</p>
+                    <button onclick="rollLocation()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Purpose</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_DECISION") {
+                btnNext.innerText = "Next: Starting Hierarchy";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.4: Settlement Decision</h2>
+                    <p class="text-slate-300 mb-4">Who initiated the founding of this town and brought the first citizens here?</p>
+                    <button onclick="rollDecision()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Decision Group</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_HIERARCHY") {
+                btnNext.innerText = "Next: Power Factions";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.5: Starting Hierarchy</h2>
+                    <p class="text-slate-300 mb-4">How do the initial community members structure their daily governance?</p>
+                    <button onclick="rollHierarchy()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Power Layout</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_FACTIONS") {
+                btnNext.innerText = "Next: Name Your City";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.6: Community Factions</h2>
+                    <p class="text-slate-300 mb-4">Determine how societal control splits within your community infrastructure.</p>
+                    <button onclick="rollFactions()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Faction Setup</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_NAME") {
+                btnNext.innerText = "Start Development History Loop";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.7: Christening</h2>
+                    <p class="text-slate-300 mb-4">Give your settlement its official name to log into history.</p>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-slate-400 mb-1">City Name</label>
+                        <input type="text" id="input-city-name" class="w-full bg-slate-900 border border-slate-700 p-2 rounded text-amber-300 font-bold text-lg" value="${state.cityName}">
+                    </div>
+                `;
+            }
+            else if (state.step === "DEV_LOOP") {
+                btnNext.innerText = state.currentDevTurn > state.maxDevTurns ? "Proceed to Wrap Up Phase" : `End Turn ${state.currentDevTurn}`;
+                
+                let turnControls = ``;
+                if (state.currentDevTurn <= state.maxDevTurns) {
+                    turnControls = `
+                        <div class="bg-slate-900 p-4 rounded border border-slate-700 mb-4">
+                            <h4 class="text-sm font-bold text-amber-400 uppercase mb-2">Step 1: Check History Vector</h4>
+                            <button onclick="rollHistoricEvent()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-slate-950 font-extrabold rounded shadow transition">🎲 Roll D666 Historical Event</button>
+                            <div id="event-result" class="mt-3 text-sm text-slate-300 hidden"></div>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded border border-slate-700">
+                            <h4 class="text-sm font-bold text-emerald-400 uppercase mb-1">Step 2: Optional Natural Growth</h4>
+                            <p class="text-xs text-slate-400 mb-2">Spend 1 citizen token from reserves to place an expanding neighborhood district.</p>
+                            <button id="btn-grow" onclick="triggerNaturalGrowth()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded text-xs transition">Spend Token & Add District</button>
+                        </div>
+                    `;
+                } else {
+                    turnControls = `<div class="p-4 bg-amber-500/10 text-amber-300 rounded border border-amber-500/30 font-medium">All historical eras have concluded. Click next to finish the chronicle.</div>`;
+                }
+
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 3: Development Era Loop</h2>
+                    <p class="text-sm text-slate-400 mb-4">Turn Loop: <span class="text-white font-bold">${state.currentDevTurn}</span> / <span class="text-white font-bold">${state.maxDevTurns}</span> eras.</p>
+                    ${turnControls}
+                `;
+            }
+            else if (state.step === "TOPPING_OUT") {
+                btnNext.innerText = "Complete Game";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 4: Topping Out & Wrap-Up</h2>
+                    <div class="space-y-4 text-sm">
+                        <div class="bg-slate-900 p-3 rounded border border-slate-800">
+                            <span class="text-emerald-400 font-bold block mb-1">1. Remaining Development Growth (${state.tokensPool} tokens left)</span>
+                            Spend remaining citizen tokens to pick existing districts and double their drawing density to represent urban packing.
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded border border-slate-800">
+                            <span class="text-purple-400 font-bold block mb-1">2. Final Naming Ceremony</span>
+                            Take turns pointing to unnamed features (roads, gates, bridges) and labeling them directly on the map.
+                        </div>
+                    </div>
+                `;
+            }
+            else if (state.step === "FINISHED") {
+                btnBack.classList.add("hidden");
+                btnNext.innerText = "Generate Another City";
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold text-emerald-400 mb-2">Chronicle Completed!</h2>
+                    <p class="text-slate-300 mb-4"><span class="text-amber-400 font-bold text-lg">${state.cityName}</span>'s historical timeline is fully established.</p>
+                `;
+            }
+        }
+
+        // --- INTERACTION LOGIC FUNCTIONS ---
+        function selectSize(key) { state.sizeKey = key; render(); }
+        function selectAge(key) { state.ageKey = key; render(); }
+
+        function logHistory(msg) {
+            const container = document.getElementById("history-log");
+            if(container.innerHTML.includes("Waiting for history")) container.innerHTML = "";
+            container.innerHTML += `<div class="py-1 border-b border-slate-900 text-slate-300">⚡ ${msg}</div>`;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function rollGeography() {
+            const roll = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+            const res = GEOGRAPHY_TABLE[roll] || "Plains: Draw custom terrain layout.";
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 2D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${res}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Geography Phase: ${res}`);
+        }
+
+        function rollFeature() {
+            if (state.featureRollCount >= 4) return;
+            const roll = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+            const text = FEATURE_TABLE[roll];
+            
+            state.featureRollCount++;
+            state.rolledFeatures.push(text); // Track features dynamically
+            
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Feature ${state.featureRollCount} (2D6: ${roll}):</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            
+            logHistory(`Terrain Component ${state.featureRollCount}: ${text}`);
+            render(); // Redraw view to inject updated state list array on screen
+        }
+
+        function rollLocation() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = LOCATION_PURPOSE_TABLE[roll];
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Location Purpose: ${text}`);
+        }
+
+        function rollDecision() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = DECISION_PURPOSE_TABLE[roll];
+            if(state.tokensPool > 0) { state.tokensPool--; state.tokensCity++; }
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Founding Trigger Action: ${text}`);
+            document.getElementById("dash-pool").innerText = state.tokensPool;
+        }
+
+        function rollHierarchy() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = HIERARCHY_TABLE[roll];
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Socio-Political Structure: ${text}`);
+        }
+
+        function rollFactions() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = FACTION_TABLE[roll];
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Factions Setup: ${text}`);
+        }
+
+        function rollHistoricEvent() {
+            const d1 = Math.floor(Math.random() * 6) + 1;
+            const d2 = Math.floor(Math.random() * 6) + 1;
+            const d3 = Math.floor(Math.random() * 6) + 1;
+            const rollKey = parseInt(`${d1}${d2}${d3}`);
+            
+            const ev = HISTORIC_EVENTS[rollKey] || { name: "Era of Transition", action: "Minor structural shifts pass across neighborhoods. -> Move 1 token optionally." };
+            
+            if(rollKey === 663) {
+                const addedTurns = Math.floor(Math.random() * 6) + 1;
+                state.maxDevTurns += addedTurns;
+                ev.action += ` (Rolled +${addedTurns} rounds!)`;
+            }
+
+            const target = document.getElementById("event-result");
+            target.innerHTML = `
+                <div class="text-amber-400 font-mono text-xs">Vector Index Roll: ${rollKey}</div>
+                <div class="text-white font-bold text-base mt-0.5">${ev.name}</div>
+                <div class="text-slate-300 text-sm mt-1">${ev.action}</div>
+            `;
+            target.classList.remove("hidden");
+            logHistory(`Turn ${state.currentDevTurn} Event (${rollKey}): ${ev.name} -> ${ev.action}`);
+        }
+
+        function triggerNaturalGrowth() {
+            if(state.tokensPool <= 0) { alert("No structural tokens remaining."); return; }
+            state.tokensPool--; state.tokensCity++;
+            logHistory(`Natural Growth Action: Spent 1 Token. District expanded.`);
+            render();
+        }
+        // --- STATE MACHINE ROUTING ---
+        function handleNext() {
+            if (state.step === "INTRO") state.step = "DISCUSSION_SETTING";
+            else if (state.step === "DISCUSSION_SETTING") {
+                state.setting = document.getElementById("input-setting").value;
+                state.expectations = document.getElementById("input-expectations").value;
+                state.step = "DISCUSSION_SCALE";
+            } 
+            else if (state.step === "DISCUSSION_SCALE") {
+                state.tokensPool = SIZE_TABLE[state.sizeKey].tokens;
+                state.maxDevTurns = AGE_TABLE[state.ageKey].turns;
+                state.step = "FOUNDING_GEOGRAPHY";
+            } 
+            else if (state.step === "FOUNDING_GEOGRAPHY") state.step = "FOUNDING_FEATURES";
+            else if (state.step === "FOUNDING_FEATURES") {
+                if(state.featureRollCount < 4) { alert("Roll all four base geography features first."); return; }
+                state.step = "FOUNDING_LOCATION";
+            } 
+            else if (state.step === "FOUNDING_LOCATION") state.step = "FOUNDING_DECISION";
+            else if (state.step === "FOUNDING_DECISION") state.step = "FOUNDING_HIERARCHY";
+            else if (state.step === "FOUNDING_HIERARCHY") state.step = "FOUNDING_FACTIONS";
+            else if (state.step === "FOUNDING_FACTIONS") state.step = "FOUNDING_NAME";
+            else if (state.step === "FOUNDING_NAME") {
+                state.cityName = document.getElementById("input-city-name").value || "Gulltown";
+                state.step = "DEV_LOOP";
+                state.currentDevTurn = 1;
+            } 
+            else if (state.step === "DEV_LOOP") {
+                state.currentDevTurn++;
+                if (state.currentDevTurn > state.maxDevTurns) state.step = "TOPPING_OUT";
+            } 
+            else if (state.step === "TOPPING_OUT") state.step = "FINISHED";
+            else if (state.step === "FINISHED") {
+                state.step = "INTRO"; state.featureRollCount = 0; state.cityName = "Gulltown"; state.rolledFeatures = [];
+                document.getElementById("history-log").innerHTML = `<div class="text-slate-500 italic">Waiting for history to unfold...</div>`;
+            }
+            render();
+        }
+
+        function handleBack() {
+            if (state.step === "DISCUSSION_SETTING") state.step = "INTRO";
+            else if (state.step === "DISCUSSION_SCALE") state.step = "DISCUSSION_SETTING";
+            else if (state.step === "FOUNDING_GEOGRAPHY") state.step = "DISCUSSION_SCALE";
+            else if (state.step === "FOUNDING_FEATURES") { state.step = "FOUNDING_GEOGRAPHY"; state.featureRollCount = 0; state.rolledFeatures = []; }
+            else if (state.step === "FOUNDING_LOCATION") state.step = "FOUNDING_FEATURES";
+            else if (state.step === "FOUNDING_DECISION") state.step = "FOUNDING_LOCATION";
+            else if (state.step === "FOUNDING_HIERARCHY") state.step = "FOUNDING_DECISION";
+            else if (state.step === "FOUNDING_FACTIONS") state.step = "FOUNDING_HIERARCHY";
+            else if (state.step === "FOUNDING_NAME") state.step = "FOUNDING_FACTIONS";
+            else if (state.step === "DEV_LOOP") {
+                if(state.currentDevTurn > 1) state.currentDevTurn--;
+                else state.step = "FOUNDING_NAME";
+            }
+            else if (state.step === "TOPPING_OUT") { state.step = "DEV_LOOP"; state.currentDevTurn = state.maxDevTurns; }
+            render();
+        }
+
+        render();
+    </script>
+</body>
+</html>
