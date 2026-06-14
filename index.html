@@ -318,7 +318,7 @@
             564: { name: "Foundry Completed", action: "Heavy metal processing boosts defensive options. -> Add a landmark." },
             565: { name: "Brickworks Opened", action: "Timber buildings are slowly replaced with sturdy masonry. -> Add a resource." },
             566: { name: "Grand Architecture Finished", action: "The city skyline becomes legendary. -> Add a magnificent landmark." },
-
+            
             // --- 6. ENVIRONMENT (611-666) ---
             611: { name: "Severe Winter", action: "Frost kills livestock and locks down transit. -> Remove a resource." },
             612: { name: "Drought", action: "Wells dry up and crops wither in the heat. -> Remove a resource." },
@@ -357,7 +357,8 @@
             665: { name: "Dimensional Rift", action: "A tear in reality opens in the city center. -> Add a highly volatile landmark." },
             666: { name: "The End Times Avoided", action: "A cataclysmic omen passes by without striking. -> Add a major landmark commemorating salvation." }
         };
-// --- ENGINE STATE VARIABLES ---
+
+        // --- ENGINE STATE VARIABLES ---
         let state = {
             step: "INTRO",
             setting: "",
@@ -372,7 +373,7 @@
             maxDevTurns: 0,
             featureRollCount: 0
         };
-
+        
         // --- RENDER ENGINE ---
         function render() {
             const content = document.getElementById("step-content");
@@ -581,7 +582,7 @@
                 `;
             }
         }
-
+        
         // --- INTERACTION LOGIC FUNCTIONS ---
         function selectSize(key) { state.sizeKey = key; render(); }
         function selectAge(key) { state.ageKey = key; render(); }
@@ -686,6 +687,7 @@
             logHistory(`Natural Growth Action: Spent 1 Token. District expanded.`);
             render();
         }
+
         // --- STATE MACHINE ROUTING ---
         function handleNext() {
             if (state.step === "INTRO") state.step = "DISCUSSION_SETTING";
