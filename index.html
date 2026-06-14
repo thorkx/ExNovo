@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ex Novo Digital Companion</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        .hidden { display: none; }
+    </style>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen font-sans">
+
+    <div class="max-w-4xl mx-auto p-6">
+        <header class="border-b border-slate-700 pb-4 mb-8 text-center">
+            <h1 class="text-4xl font-extrabold text-amber-400 tracking-wider">EX NOVO</h1>
+            <p class="text-slate-400 text-sm mt-1">Settlement Generation Companion Engine</p>
+        </header>
+
+        <div id="state-dashboard" class="bg-slate-800 rounded-lg p-4 mb-6 border border-slate-700 grid grid-cols-2 md:grid-cols-4 gap-4 hidden">
+            <div><span class="text-xs text-slate-400 block uppercase font-bold">City Name</span><span id="dash-name" class="font-semibold text-amber-300">Unnamed</span></div>
+            <div><span class="text-xs text-slate-400 block uppercase font-bold">Scale & Age</span><span id="dash-scale" class="font-semibold">-</span></div>
+            <div><span class="text-xs text-slate-400 block uppercase font-bold">Token Pool (Reserve)</span><span id="dash-pool" class="font-semibold text-emerald-400">0</span></div>
+            <div><span class="text-xs text-slate-400 block uppercase font-bold">Current Step</span><span id="dash-step" class="font-semibold text-purple-400">Setup</span></div>
+        </div>
+
+        <main id="app-card" class="bg-slate-800 rounded-xl shadow-2xl p-6 border border-slate-700 min-h-[400px] flex flex-col justify-between">
+            <div id="step-content">
+                </div>
+            
+            <div id="step-actions" class="mt-8 pt-4 border-t border-slate-700 flex justify-between items-center">
+                <button id="btn-back" class="px-4 py-2 bg-slate-700 hover:bg-slate-600 rounded text-sm font-medium transition hidden" onclick="handleBack()">Back</button>
+                <div class="flex-grow"></div>
+                <button id="btn-next" class="px-6 py-2 bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold rounded shadow transition" onclick="handleNext()">Begin Game</button>
+            </div>
+        </main>
+
+        <section class="mt-8">
+            <h3 class="text-lg font-bold text-slate-300 mb-3 uppercase tracking-wider text-xs">Chronicle & Map Actions Log</h3>
+            <div id="history-log" class="bg-slate-950 rounded-lg p-4 h-48 overflow-y-auto text-sm text-slate-400 font-mono space-y-2 border border-slate-800">
+                <div class="text-slate-500 italic">Waiting for history to unfold...</div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // --- DATA DICTIONARIES (Extracted Data Tables from Game Manual) ---
+        const SIZE_TABLE = {
+            1: { name: "Village", grid: 5, tokens: 3, desc: "A small hamlet focused on necessities." },
+            2: { name: "Town", grid: 7, tokens: 5, desc: "Big enough for merchants and talented craftsmen." },
+            3: { name: "Small City", grid: 9, tokens: 8, desc: "Large enough for a market place and maybe a school." },
+            4: { name: "Medium City", grid: 11, tokens: 13, desc: "Sizable city with multiple specialized industries." },
+            5: { name: "Large City", grid: 13, tokens: 18, desc: "Big enough to be the capital of a nation." },
+            6: { name: "Metropolis", grid: 15, tokens: 25, desc: "A giant city of global fame and lasting ages." }
+        };
+
+        const AGE_TABLE = {
+            1: { name: "Nestling", turns: 4, desc: "Still young, only a generation old." },
+            2: { name: "Budding", turns: 6, desc: "Has already put down some roots for storms." },
+            3: { name: "Grown", turns: 10, desc: "Has seen a handful of generations live and die." },
+            4: { name: "Aged", turns: 14, desc: "A few hundred years of urban development and turmoil." },
+            5: { name: "Elderly", turns: 20, desc: "Built to last. Rulers are only passing fads." },
+            6: { name: "Ancient", turns: 25, desc: "Seen the millennia go by and shrugged." }
+        };
+
+        const GEOGRAPHY_TABLE = {
+            2: "Mountains: Draw a mountain range covering at least 1/2 of the map.",
+            3: "Plateau: Draw a plateau covering at least 1/2 of the map.",
+            4: "Valley: Draw a mountain range at least 1 quadrant thick on two opposing sides.",
+            5: "Deep Forests: Draw a forested area covering at least 1/2 of the map.",
+            6: "Hills: Draw at least two sizeable hills, each at least 2 quadrants big.",
+            7: "Inland: Vast plains. Draw nothing.",
+            8: "Riverland: Draw a wide, meandering river crossing the map.",
+            9: "Coastal: Draw a coastal line covering about 1/3 of the map with ocean.",
+            10: "Peninsula: Surrounded by water on three sides.",
+            11: "Archipelago: A cluster of islands scattered across the water.",
+            12: "Swampland: Low layout wetlands covering at least half the map."
+        };
+
+        const FEATURE_TABLE = {
+            2: "Caves or underground passage system.",
+            3: "Unusual, canyon, cliff, or rock formation.",
+            4: "Small mountain range, hill, or high ground.",
+            5: "A tributary, spring, oasis, or small lake.",
+            6: "Woods, copse, or thick wild growth.",
+            7: "A second smaller river or body of water.",
+            8: "A patch of fertile fields or exceptional land.",
+            9: "A rare or localized geographical anomaly.",
+            10: "A natural harbor, bay, or safe landing point.",
+            11: "A dangerous terrain hazard like a chasm or sulfur vent.",
+            12: "A sacred or historically significant landmark site."
+        };
+
+        const LOCATION_PURPOSE_TABLE = {
+            1: "Abundant food: Game, fish or fertile land. Draw a related landmark/resource.",
+            2: "Crucial trade route: Confluence of rivers or crossroads. Draw a related landmark/resource.",
+            3: "Easily defensible: Natural choke point or high ground. Draw a related landmark/resource.",
+            4: "Abundance of natural resources: Timber, ore, or stone. Draw a related landmark/resource.",
+            5: "Sacred or magical value: A holy site or nexus. Draw a related landmark/resource.",
+            6: "Strategic value: Overlooking a valley or border. Draw a related landmark/resource."
+        };
+
+        const DECISION_PURPOSE_TABLE = {
+            1: "By accident: A shipwreck or simple camp turned permanent. -> Add first district, move 1 token to City.",
+            2: "Planned temporary settlement: Outpost turned proper town. -> Add first district, move 1 token to City.",
+            3: "Nomads settling down: A catastrophe or windfall changed their style. -> Add first district, move 1 token to City.",
+            4: "Refugees in need: Disaster destroyed their old home. -> Add first district, move 1 token to City.",
+            5: "Settlers looking for freedom: Escaping an oppressive authority. -> Add first district, move 1 token to City.",
+            6: "Divine commandment/Vision: Built by holy decree. -> Add first district, move 1 token to City."
+        };
+
+        const HIERARCHY_TABLE = {
+            1: "Unstructured collective: Anarchy or basic communal sharing. -> Draw the route that led here.",
+            2: "Communal voting: Citizens vote on their structural issues. -> Draw the route that led here.",
+            3: "Improvisational hierarchy: Experts or rulers assembled only when needed. -> Draw the route that led here.",
+            4: "Governing council: A select few hold the reigns of local power. -> Draw the route that led here.",
+            5: "Ruling caste: Devoted by birth, blood, or divine grace. -> Draw the route that led here.",
+            6: "Singular ruler: One throne, one crown, absolute authority. -> Draw the route that led here."
+        };
+
+        const FACTION_TABLE = {
+            1: "Single Faction: Smooth operations.",
+            2: "Two Factions: A clear dynamic of bipolar friction or balance.",
+            3: "Two Factions: One clearly dominating the political layout.",
+            4: "Three Factions: Triangular tension or temporary alliances.",
+            5: "Three Factions: One major group and two small upstarts.",
+            6: "Four Factions: A complex, unstable web of competing agendas."
+        };
+
+        // Simplified Event Table Sample for Execution/Demo Purposes
+        const HISTORIC_EVENTS = {
+            111: { name: "Civil Protests", action: "The citizens are unhappy. -> A faction gains power." },
+            112: { name: "Civil Unrest", action: "Violent, uncontrolled riots rage. -> Remove a resource or landmark." },
+            122: { name: "Skirmishes over Resources", action: "Conflict breaks out over a crucial asset. -> Add or remove a resource." },
+            211: { name: "Beloved Leader Rises", action: "A charismatic figure takes power. -> Add a faction." },
+            311: { name: "Economic Boom", action: "Trade thrives. -> Add a resource or a district." },
+            411: { name: "Festival Day", action: "A grand cultural tradition emerges. -> Add a landmark." },
+            511: { name: "Infrastructure Push", action: "New roads and structures are built. -> Add a landmark or district." },
+            653: { name: "FIRE!", action: "The fire of a century tears through houses. -> Remove at least 2 districts or landmarks." }
+        };
+
+        // --- ENGINE STATE VARIABLES ---
+        let state = {
+            step: "INTRO", // Current FSM state
+            setting: "",
+            expectations: "",
+            sizeKey: 1,
+            ageKey: 1,
+            cityName: "Gulltown",
+            tokensPool: 0,
+            tokensCity: 0,
+            factions: [],
+            currentDevTurn: 1,
+            maxDevTurns: 0,
+            featureRollCount: 0
+        };
+
+        // --- RENDER ENGINE / STATE MACHINE MANAGEMENT ---
+        function render() {
+            const content = document.getElementById("step-content");
+            const btnBack = document.getElementById("btn-back");
+            const btnNext = document.getElementById("btn-next");
+            const dashboard = document.getElementById("state-dashboard");
+
+            // Sync Header Dashboard values
+            document.getElementById("dash-name").innerText = state.cityName;
+            document.getElementById("dash-scale").innerText = `${SIZE_TABLE[state.sizeKey].name} / ${AGE_TABLE[state.ageKey].name}`;
+            document.getElementById("dash-pool").innerText = state.tokensPool;
+            document.getElementById("dash-step").innerText = state.step;
+
+            if (state.step === "INTRO") {
+                dashboard.classList.add("hidden");
+                btnBack.classList.add("hidden");
+                btnNext.innerText = "Setup Setting";
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold text-amber-400 mb-4">Welcome to Ex Novo</h2>
+                    <p class="text-slate-300 leading-relaxed">This digital companion will guide you sequentially through drawing and generating your custom settlement map history. Grab a physical blank piece of paper, a pencil, and track map modifications along with the app prompts.</p>
+                `;
+            } 
+            else if (state.step === "DISCUSSION_SETTING") {
+                dashboard.classList.add("hidden");
+                btnBack.classList.remove("hidden");
+                btnNext.innerText = "Next: Scale & Tokens";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 1: Discussion & Settings</h2>
+                    <p class="text-sm text-slate-400 mb-4">Align assumptions with your group before starting to draw.</p>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider font-bold text-slate-400 mb-1">World Setting Theme</label>
+                            <input type="text" id="input-setting" class="w-full bg-slate-900 border border-slate-700 p-2 rounded text-slate-200" placeholder="e.g., Post-apocalyptic wasteland, High fantasy kingdom" value="${state.setting}">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-wider font-bold text-slate-400 mb-1">Game Expectations / Intent</label>
+                            <input type="text" id="input-expectations" class="w-full bg-slate-900 border border-slate-700 p-2 rounded text-slate-200" placeholder="e.g., Backdrop for next D&D session, Creative writing exercise" value="${state.expectations}">
+                        </div>
+                    </div>
+                `;
+            }
+            else if (state.step === "DISCUSSION_SCALE") {
+                dashboard.classList.remove("hidden");
+                btnNext.innerText = "Next: Geography";
+                
+                let sizeOptions = Object.keys(SIZE_TABLE).map(k => `
+                    <button onclick="selectSize(${k})" class="p-3 rounded-lg text-left border ${state.sizeKey == k ? 'bg-amber-500/20 border-amber-400 text-amber-300' : 'bg-slate-900 border-slate-700 hover:border-slate-500'} transition">
+                        <div class="font-bold">${SIZE_TABLE[k].name}</div>
+                        <div class="text-xs text-slate-400">${SIZE_TABLE[k].desc}</div>
+                        <div class="text-xs text-emerald-400 mt-1">Grid: ${SIZE_TABLE[k].grid} lines | Tokens: ${SIZE_TABLE[k].tokens}</div>
+                    </button>
+                `).join("");
+
+                let ageOptions = Object.keys(AGE_TABLE).map(k => `
+                    <button onclick="selectAge(${k})" class="p-3 rounded-lg text-left border ${state.ageKey == k ? 'bg-purple-500/20 border-purple-400 text-purple-300' : 'bg-slate-900 border-slate-700 hover:border-slate-500'} transition">
+                        <div class="font-bold">${AGE_TABLE[k].name}</div>
+                        <div class="text-xs text-slate-400">${AGE_TABLE[k].desc}</div>
+                        <div class="text-xs text-purple-400 mt-1">Turns: ${AGE_TABLE[k].turns} rounds</div>
+                    </button>
+                `).join("");
+
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-4">Phase 1.3 & 1.4: Target Scale & Lifespan</h2>
+                    <div class="mb-4"><label class="block text-xs font-bold text-slate-400 mb-2 uppercase">1. Select Target Size</label><div class="grid grid-cols-1 md:grid-cols-3 gap-3">${sizeOptions}</div></div>
+                    <div><label class="block text-xs font-bold text-slate-400 mb-2 uppercase">2. Select Target Age</label><div class="grid grid-cols-1 md:grid-cols-3 gap-3">${ageOptions}</div></div>
+                    <div class="mt-6 bg-slate-900 p-3 rounded text-sm text-slate-400 border border-slate-800">
+                        <strong>Action:</strong> Draw a loose, organic grid of <span class="text-amber-300 font-bold">${SIZE_TABLE[state.sizeKey].grid} lines</span> on your paper. Gather <span class="text-emerald-400 font-bold">${SIZE_TABLE[state.sizeKey].tokens} tokens</span> in your reserve pool.
+                    </div>
+                `;
+            }
+            else if (state.step === "FOUNDING_GEOGRAPHY") {
+                btnNext.innerText = "Next: Terrain Features";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.1: Major Geography</h2>
+                    <p class="text-slate-300 mb-4">Let's discover what geographic region this settlement occupies.</p>
+                    <button onclick="rollGeography()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 2D6 Geography</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_FEATURES") {
+                btnNext.innerText = state.featureRollCount >= 4 ? "Next: Founding Location" : "Roll Next Feature";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.2: Terrain Features (${state.featureRollCount}/4)</h2>
+                    <p class="text-slate-300 mb-4">We must discover four distinct natural landmarks surrounding the settlement grid area.</p>
+                    <button id="btn-roll-feature" ${state.featureRollCount >= 4 ? 'disabled class="px-5 py-3 bg-slate-700 text-slate-500 cursor-not-allowed rounded"' : 'class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow transition" onclick="rollFeature()"'} >🎲 Roll Terrain Feature</button>
+                    <div id="roll-result" class="hidden mt-4 bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_LOCATION") {
+                btnNext.innerText = "Next: Founding Decision";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.3: Founding Location Purpose</h2>
+                    <p class="text-slate-300 mb-4">What was naturally special or uniquely valuable about this exact spot?</p>
+                    <button onclick="rollLocation()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Purpose</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_DECISION") {
+                btnNext.innerText = "Next: Starting Hierarchy";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.4: Settlement Decision</h2>
+                    <p class="text-slate-300 mb-4">Who initiated the founding of this town and brought the first citizens here?</p>
+                    <button onclick="rollDecision()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Decision Group</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_HIERARCHY") {
+                btnNext.innerText = "Next: Power Factions";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.5: Starting Hierarchy</h2>
+                    <p class="text-slate-300 mb-4">How do the initial community members structure their daily lives and power?</p>
+                    <button onclick="rollHierarchy()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Power Layout</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_FACTIONS") {
+                btnNext.innerText = "Next: Name Your City";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.6: Community Factions</h2>
+                    <p class="text-slate-300 mb-4">Determine how societal control splits within your community infrastructure.</p>
+                    <button onclick="rollFactions()" class="px-5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded shadow mb-4 transition">🎲 Roll 1D6 Faction Setup</button>
+                    <div id="roll-result" class="hidden bg-slate-900 p-4 rounded border border-indigo-500/30"></div>
+                `;
+            }
+            else if (state.step === "FOUNDING_NAME") {
+                btnNext.innerText = "Start Development History Loop";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 2.7: Christening</h2>
+                    <p class="text-slate-300 mb-4">Give your settlement its official structural name to log into the system history records.</p>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-slate-400 mb-1">City Name</label>
+                        <input type="text" id="input-city-name" class="w-full bg-slate-900 border border-slate-700 p-2 rounded text-amber-300 font-bold text-lg" value="${state.cityName}">
+                    </div>
+                    <p class="text-xs text-slate-400 mt-2 italic">Tip: If stuck, name it after a terrain feature nearby (e.g., Salmon River, Black Forest Cave).</p>
+                `;
+            }
+            else if (state.step === "DEV_LOOP") {
+                btnNext.innerText = state.currentDevTurn > state.maxDevTurns ? "Proceed to Wrap Up Phase" : `End Turn ${state.currentDevTurn}`;
+                
+                let turnControls = ``;
+                if (state.currentDevTurn <= state.maxDevTurns) {
+                    turnControls = `
+                        <div class="bg-slate-900 p-4 rounded border border-slate-700 mb-4">
+                            <h4 class="text-sm font-bold text-amber-400 uppercase mb-2">Step 1: Check History Vector</h4>
+                            <button onclick="rollHistoricEvent()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-slate-950 font-extrabold rounded shadow transition">🎲 Roll D666 Historical Event</button>
+                            <div id="event-result" class="mt-3 text-sm text-slate-300 hidden"></div>
+                        </div>
+                        <div class="bg-slate-900 p-4 rounded border border-slate-700">
+                            <h4 class="text-sm font-bold text-emerald-400 uppercase mb-1">Step 2: Optional Natural Growth</h4>
+                            <p class="text-xs text-slate-400 mb-2">You can spend 1 citizen token from reserves to place a standard residential/commercial district.</p>
+                            <button id="btn-grow" onclick="triggerNaturalGrowth()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-600 rounded text-xs transition">Spend Token & Add District</button>
+                        </div>
+                    `;
+                } else {
+                    turnControls = `<div class="p-4 bg-amber-500/10 text-amber-300 rounded border border-amber-500/30 font-medium">All historical eras have concluded. The structural foundation of your city is established. Click next to resolve trailing trends.</div>`;
+                }
+
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 3: Era Development Era Loop</h2>
+                    <p class="text-sm text-slate-400 mb-4">Turn Loop: <span class="text-white font-bold">${state.currentDevTurn}</span> out of <span class="text-white font-bold">${state.maxDevTurns}</span> eras.</p>
+                    ${turnControls}
+                `;
+            }
+            else if (state.step === "TOPPING_OUT") {
+                btnNext.innerText = "Complete Game";
+                content.innerHTML = `
+                    <h2 class="text-xl font-bold text-amber-400 mb-2">Phase 4: Topping Out & Wrap-Up</h2>
+                    <p class="text-slate-300 mb-4">Your map is structurally complete. Let's process left over details:</p>
+                    <div class="space-y-4 text-sm">
+                        <div class="bg-slate-900 p-3 rounded border border-slate-800">
+                            <span class="text-emerald-400 font-bold block mb-1">1. Remaining Development Growth (${state.tokensPool} tokens left)</span>
+                            Take turns spending all remaining citizen tokens in your reserve pool. For each token spent, pick an existing district on the map and double its drawing density/shading to represent industrialization and population packing.
+                        </div>
+                        <div class="bg-slate-900 p-3 rounded border border-slate-800">
+                            <span class="text-purple-400 font-bold block mb-1">2. Final Naming Ceremony</span>
+                            Each player takes turns pointing to one unnamed object on your map (a road, mountain range, river mouth, or city wall gate) and writes down an official structural name directly alongside the drawing asset.
+                        </div>
+                    </div>
+                `;
+            }
+            else if (state.step === "FINISHED") {
+                btnBack.classList.add("hidden");
+                btnNext.innerText = "Generate Another City";
+                content.innerHTML = `
+                    <h2 class="text-2xl font-bold text-emerald-400 mb-2">Chronicle Completed!</h2>
+                    <p class="text-slate-300 mb-4">The historical footprint of <span class="text-amber-400 font-bold text-lg">${state.cityName}</span> is permanently recorded. Your custom generated map layer is fully prepped to serve as an immersive sandbox backdrop for your creative writing or upcoming tabletop roleplaying campaigns.</p>
+                    <div class="bg-slate-950 p-4 rounded text-xs font-mono text-slate-400 max-h-48 overflow-y-auto border border-slate-800">
+                        <strong>Final Records Summary:</strong><br>
+                        Theme Setting: ${state.setting || "Standard Fantasy"}<br>
+                        Target Footprint: ${SIZE_TABLE[state.sizeKey].name} (${SIZE_TABLE[state.sizeKey].grid} Line Grid)<br>
+                        Historical Lifespan: ${AGE_TABLE[state.ageKey].name} Era
+                    </div>
+                `;
+            }
+        }
+
+        // --- INTERACTION LOGIC FUNCTIONS ---
+        function selectSize(key) { state.sizeKey = key; render(); }
+        function selectAge(key) { state.ageKey = key; render(); }
+
+        function logHistory(msg) {
+            const container = document.getElementById("history-log");
+            if(container.innerHTML.includes("Waiting for history")) container.innerHTML = "";
+            container.innerHTML += `<div class="py-1 border-b border-slate-900 text-slate-300">⚡ ${msg}</div>`;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function rollGeography() {
+            const roll = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+            const res = GEOGRAPHY_TABLE[roll] || "Diverse Plains: Draw custom terrain layout.";
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 2D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${res}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Geography Phase: ${res}`);
+        }
+
+        function rollFeature() {
+            if (state.featureRollCount >= 4) return;
+            const roll = Math.floor(Math.random() * 6) + 1 + Math.floor(Math.random() * 6) + 1;
+            const text = FEATURE_TABLE[roll];
+            state.featureRollCount++;
+            
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Feature ${state.featureRollCount} Rolled (2D6: ${roll}):</span><p class="text-white mt-1 font-semibold">${text}</p><p class="text-xs text-amber-400 mt-1">→ Action: Draw this element on an empty quadrant section of your map sheet.</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Terrain Component ${state.featureRollCount}: ${text}`);
+            render();
+        }
+
+        function rollLocation() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = LOCATION_PURPOSE_TABLE[roll];
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Location Attribute Purpose: ${text}`);
+        }
+
+        function rollDecision() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = DECISION_PURPOSE_TABLE[roll];
+            
+            // Adjust system memory tokens
+            if(state.tokensPool > 0) {
+                state.tokensPool--;
+                state.tokensCity++;
+            }
+            
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Founding Trigger Action: ${text}`);
+            document.getElementById("dash-pool").innerText = state.tokensPool;
+        }
+
+        function rollHierarchy() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = HIERARCHY_TABLE[roll];
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Socio-Political Law Structure: ${text}`);
+        }
+
+        function rollFactions() {
+            const roll = Math.floor(Math.random() * 6) + 1;
+            const text = FACTION_TABLE[roll];
+            const target = document.getElementById("roll-result");
+            target.innerHTML = `<span class="text-indigo-400 font-bold">Rolled 1D6 Result: ${roll}</span><p class="text-white mt-1 font-semibold">${text}</p><p class="text-xs text-amber-300 mt-1">→ Draw a distinct home-base landmark building on your paper map for each listed group.</p>`;
+            target.classList.remove("hidden");
+            logHistory(`Community Faction Separation: ${text}`);
+        }
+
+        function rollHistoricEvent() {
+            const keys = Object.keys(HISTORIC_EVENTS);
+            const randomKey = keys[Math.floor(Math.random() * keys.length)];
+            const ev = HISTORIC_EVENTS[randomKey];
+            
+            const target = document.getElementById("event-result");
+            target.innerHTML = `
+                <div class="text-amber-400 font-mono text-xs">Vector Index Roll: ${randomKey}</div>
+                <div class="text-white font-bold text-base mt-0.5">${ev.name}</div>
+                <div class="text-slate-300 text-sm mt-1">${ev.action}</div>
+                <div class="text-xs text-amber-500 italic mt-2">→ Action: Verbally describe how this event changes the city landscape, then draw or alter the elements on your paper sheet.</div>
+            `;
+            target.classList.remove("hidden");
+            logHistory(`Turn ${state.currentDevTurn} Event (${randomKey}): ${ev.name} -> ${ev.action}`);
+        }
+
+        function triggerNaturalGrowth() {
+            if(state.tokensPool <= 0) {
+                alert("No structural tokens remaining in your growth reserve pool.");
+                return;
+            }
+            state.tokensPool--;
+            state.tokensCity++;
+            logHistory(`Natural Growth Action: Spent 1 Token. Added an expansion neighborhood district to the layout map.`);
+            render();
+        }
+
+        // --- SEQUENTIAL STEP NAVIGATION STATE MACHINE ENGINE ---
+        function handleNext() {
+            if (state.step === "INTRO") {
+                state.step = "DISCUSSION_SETTING";
+            } 
+            else if (state.step === "DISCUSSION_SETTING") {
+                state.setting = document.getElementById("input-setting").value;
+                state.expectations = document.getElementById("input-expectations").value;
+                state.step = "DISCUSSION_SCALE";
+            } 
+            else if (state.step === "DISCUSSION_SCALE") {
+                state.tokensPool = SIZE_TABLE[state.sizeKey].tokens;
+                state.maxDevTurns = AGE_TABLE[state.ageKey].turns;
+                state.step = "FOUNDING_GEOGRAPHY";
+                logHistory(`Initialized setup configuration profiles.`);
+            } 
+            else if (state.step === "FOUNDING_GEOGRAPHY") {
+                state.step = "FOUNDING_FEATURES";
+            } 
+            else if (state.step === "FOUNDING_FEATURES") {
+                if(state.featureRollCount < 4) {
+                    alert("Please click the roll button to generate all four base geography features before executing the advance state command.");
+                    return;
+                }
+                state.step = "FOUNDING_LOCATION";
+            } 
+            else if (state.step === "FOUNDING_LOCATION") {
+                state.step = "FOUNDING_DECISION";
+            } 
+            else if (state.step === "FOUNDING_DECISION") {
+                state.step = "FOUNDING_HIERARCHY";
+            } 
+            else if (state.step === "FOUNDING_HIERARCHY") {
+                state.step = "FOUNDING_FACTIONS";
+            } 
+            else if (state.step === "FOUNDING_FACTIONS") {
+                state.step = "FOUNDING_NAME";
+            } 
+            else if (state.step === "FOUNDING_NAME") {
+                state.cityName = document.getElementById("input-city-name").value || "Gulltown";
+                state.step = "DEV_LOOP";
+                state.currentDevTurn = 1;
+                logHistory(`Christened city name entry asset registry file as: ${state.cityName}`);
+            } 
+            else if (state.step === "DEV_LOOP") {
+                state.currentDevTurn++;
+                if (state.currentDevTurn > state.maxDevTurns) {
+                    state.step = "TOPPING_OUT";
+                }
+            } 
+            else if (state.step === "TOPPING_OUT") {
+                state.step = "FINISHED";
+            } 
+            else if (state.step === "FINISHED") {
+                // Reset standard defaults to rerun
+                state.step = "INTRO";
+                state.featureRollCount = 0;
+                state.cityName = "Gulltown";
+                document.getElementById("history-log").innerHTML = `<div class="text-slate-500 italic">Waiting for history to unfold...</div>`;
+            }
+            render();
+        }
+
+        function handleBack() {
+            // Simple history stack stepping backwards for user errors
+            if (state.step === "DISCUSSION_SETTING") state.step = "INTRO";
+            else if (state.step === "DISCUSSION_SCALE") state.step = "DISCUSSION_SETTING";
+            else if (state.step === "FOUNDING_GEOGRAPHY") state.step = "DISCUSSION_SCALE";
+            else if (state.step === "FOUNDING_FEATURES") { state.step = "FOUNDING_GEOGRAPHY"; state.featureRollCount = 0; }
+            else if (state.step === "FOUNDING_LOCATION") state.step = "FOUNDING_FEATURES";
+            else if (state.step === "FOUNDING_DECISION") state.step = "FOUNDING_LOCATION";
+            else if (state.step === "FOUNDING_HIERARCHY") state.step = "FOUNDING_DECISION";
+            else if (state.step === "FOUNDING_FACTIONS") state.step = "FOUNDING_HIERARCHY";
+            else if (state.step === "FOUNDING_NAME") state.step = "FOUNDING_FACTIONS";
+            else if (state.step === "DEV_LOOP") {
+                if(state.currentDevTurn > 1) state.currentDevTurn--;
+                else state.step = "FOUNDING_NAME";
+            }
+            else if (state.step === "TOPPING_OUT") { state.step = "DEV_LOOP"; state.currentDevTurn = state.maxDevTurns; }
+            render();
+        }
+
+        // Initialize First View Render Frame
+        render();
+    </script>
+</body>
+</html>
